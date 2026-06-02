@@ -1,0 +1,9 @@
+{
+  "name": "PingFang Font Tools",
+  "id": "pingfang-font-tools-local",
+  "api": "1.0.0",
+  "documentAccess": "dynamic-page",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"]
+}

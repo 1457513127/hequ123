@@ -1,0 +1,36 @@
+{
+  "pages": [
+    { "path": "pages/workbench/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/todo/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/object/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/object/list", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/object/detail", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/resource/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/resource/list", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/resource/detail", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/hazard/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/hazard/list", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/hazard/detail", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/event/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/event/detail", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/event/flow", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/event/close", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/event/logs", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/evaluation/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/education/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/organization/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/profile/index", "style": { "navigationStyle": "custom" } }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "校园安全",
+    "navigationBarBackgroundColor": "#f5f8fb",
+    "backgroundColor": "#f5f8fb"
+  },
+  "h5": {
+    "router": {
+      "base": "/",
+      "mode": "hash"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 18px;
+        font-family: Inter, sans-serif;
+        color: var(--figma-color-text);
+        background: var(--figma-color-bg);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+      p {
+        margin: 0 0 14px;
+        color: var(--figma-color-text-secondary);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      label {
+        display: block;
+        margin: 14px 0 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      input, select {
+        width: 100%;
+        box-sizing: border-box;
+        height: 34px;
+        border-radius: 6px;
+        border: 1px solid var(--figma-color-border);
+        background: var(--figma-color-bg);
+        color: var(--figma-color-text);
+        padding: 0 10px;
+      }
+      button {
+        height: 34px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--figma-color-bg-brand);
+        color: var(--figma-color-text-onbrand);
+        padding: 0 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.secondary {
+        background: var(--figma-color-bg-secondary);
+        color: var(--figma-color-text);
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .row button {
+        flex: 1;
+      }
+      pre {
+        white-space: pre-wrap;
+        max-height: 170px;
+        overflow: auto;
+        padding: 10px;
+        border-radius: 6px;
+        background: var(--figma-color-bg-secondary);
+        color: var(--figma-color-text);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .ok { color: var(--figma-color-text-success); }
+      .bad { color: var(--figma-color-text-danger); }
+    </style>
+  </head>
+  <body>
+    <h1>PingFang Font Tools</h1>
+    <p>
+      本插件运行在你的 Figma Desktop 本地插件上下文中，用于检测并批量替换文本字体为 PingFang SC / 苹方。
+    </p>
+
+    <label for="family">目标字体族</label>
+    <input id="family" value="PingFang SC" />
+
+    <label for="scope">作用范围</label>
+    <select id="scope">
+      <option value="file">整个文件</option>
+      <option value="page">当前页面</option>
+    </select>
+
+    <label for="mode">替换模式</label>
+    <select id="mode">
+      <option value="fallbacks">只替换 Noto Sans SC / Inter / 常见占位字体</option>
+      <option value="all">替换所有文本节点</option>
+    </select>
+
+    <div class="row">
+      <button class="secondary" id="scan">扫描苹方字体</button>
+      <button id="replace">开始替换</button>
+    </div>
+
+    <div class="row">
+      <button class="secondary" id="close">关闭</button>
+    </div>
+
+    <label>结果</label>
+    <pre id="output">等待操作...</pre>
+
+    <script>
+      const output = document.getElementById('output');
+      const family = document.getElementById('family');
+      const scope = document.getElementById('scope');
+      const mode = document.getElementById('mode');
+
+      function write(text, ok) {
+        output.className = ok === true ? 'ok' : ok === false ? 'bad' : '';
+        output.textContent = text;
+      }
+
+      document.getElementById('scan').onclick = () => {
+        write('正在扫描本机 Figma 可见字体...', null);
+        parent.postMessage({ pluginMessage: { type: 'scan-fonts' } }, '*');
+      };
+
+      document.getElementById('replace').onclick = () => {
+        write('正在替换，请稍等。大文件可能需要几十秒...', null);
+        parent.postMessage({
+          pluginMessage: {
+            type: 'replace',
+            options: {
+              family: family.value.trim() || 'PingFang SC',
+              scope: scope.value,
+              mode: mode.value
+            }
+          }
+        }, '*');
+      };
+
+      document.getElementById('close').onclick = () => {
+        parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+      };
+
+      window.onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (!msg) return;
+        if (msg.type === 'fonts') {
+          if (!msg.pingFangFonts.length) {
+            write('没有扫描到 PingFang / 苹方字体。请确认使用 Figma Desktop，并重启 Figma 或字体服务。', false);
+            return;
+          }
+          write('扫描到字体：\n' + msg.pingFangFonts.map((f) => `${f.family} / ${f.style}`).join('\n'), true);
+        }
+        if (msg.type === 'result') {
+          write(msg.message + '\n\n' + JSON.stringify(msg, null, 2), msg.ok);
+        }
+      };
+    </script>
+  </body>
+</html>
